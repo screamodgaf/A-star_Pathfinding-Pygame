@@ -1,6 +1,9 @@
 # Import the pygame module
 import pygame
 import sys
+from node import Node
+
+
 def createControlableObject():
     # Create a rectangle object
     rect = pygame.Rect(100, 300, 100, 50)
@@ -42,38 +45,29 @@ def drawControlableObject(player):
 
 def associateMatrixToDrawableRects(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, FIELD_SIZE):
     worldRectsList = []
-    posX = 0
-    posY = 0
-    for x in range(MATRIX_WIDTH):
-        for y in range(MATRIX_HEIGHT):
-            rect = pygame.Rect(posX, posY, FIELD_SIZE, FIELD_SIZE)
-            worldRectsList.append(rect)
-            posX += FIELD_SIZE
-        posX = 0
-        posY += FIELD_SIZE
 
-    #worldRectsList.append(rect)
+    for y in range(MATRIX_HEIGHT):
+        for x in range(MATRIX_WIDTH):
+            node = Node(x * FIELD_SIZE, y * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE) #instead: rect = pygame.Rect(posX, posY, FIELD_SIZE, FIELD_SIZE)
+            worldRectsList.append(node)
+
+    print("number of elements in worldRectsList: ", len(worldRectsList))
     return worldRectsList
 
-def drawMatrix(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, worldRectsList):
+def drawMatrix(screen, matrix, MATRIX_HEIGHT, MATRIX_WIDTH, worldRectsList):
     BLUE = (0,0,255)
     RED = (255,0,0)
+    YELLOW = (255,255,0)
 
-    #usingthe formula: matrix[x + y * Height]
-    '''
-    for x in range(MATRIX_WIDTH):
-        for y in range(MATRIX_HEIGHT):
-            if matrix[x + y * MATRIX_HEIGHT] == 0:
-                pygame.draw.rect(screen, BLUE, worldRectsList[x + y * MATRIX_HEIGHT])
-            elif matrix[x + y * MATRIX_HEIGHT] == 1:
-                pygame.draw.rect(screen, RED, worldRectsList[x + y * MATRIX_HEIGHT])
-'''
-    for x in range(len(matrix)):
-        if matrix[x] == 0:
-            pygame.draw.rect(screen, BLUE, worldRectsList[x])
-        elif matrix[x] == 1:
-            pygame.draw.rect(screen, RED, worldRectsList[x])
+    for y in range(MATRIX_HEIGHT):
+        for x in range(MATRIX_WIDTH):
+            if matrix[x + y * MATRIX_WIDTH] == 0:
+                worldRectsList[x + y * MATRIX_WIDTH].draw(screen, BLUE)
+            elif matrix[x + y * MATRIX_WIDTH] == 1:
+                worldRectsList[x + y * MATRIX_WIDTH].draw(screen, RED)
 
+    worldRectsList[(MATRIX_WIDTH-1) + (MATRIX_HEIGHT-1) * MATRIX_WIDTH].draw(screen, YELLOW)
+ 
 # Initialize pygame
 pygame.init()
 # Create a display surface
@@ -92,15 +86,24 @@ player = createControlableObject()
 color = pygame.Color(255, 0, 0)
 
 #Create matrix
-matrix = [1,0,1,
-          0,1,0,
-          1,1,1]
+matrix = [1,1,1,1,1,1,1,1,
+          1,0,0,0,0,0,0,1,
+          1,0,1,0,1,0,0,1,
+          1,0,1,1,1,0,0,1,
+          1,0,0,0,0,0,0,1,
+          1,1,1,1,1,1,1,1]
 
-MATRIX_HEIGHT = 3
-MATRIX_WIDTH = 3
+MATRIX_HEIGHT = 6
+MATRIX_WIDTH = 8
 FIELD_SIZE = 100
 
 worldRectsList = associateMatrixToDrawableRects(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, FIELD_SIZE)
+
+nodesToBeEvaluated = [] #open set - when this list gets empty and the goal is not reacher, the search must be stopped | it starts with initial node
+nodesEvaluated = [] #close set is empty at the beginning
+startNode = worldRectsList[0 + 0 * MATRIX_WIDTH]
+endNode = worldRectsList[0 + 0 * MATRIX_WIDTH]
+
 
 # Create a variable for the game loop
 running = True
@@ -119,7 +122,7 @@ while running:
     screen.fill((0, 0, 0))
 
     #draw your objects on the screen:
-    drawMatrix(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, worldRectsList)
+    drawMatrix(screen, matrix, MATRIX_HEIGHT, MATRIX_WIDTH, worldRectsList)
     #drawObjects(listOfObjectsToDraw)
     #drawControlableObject(player)
 
