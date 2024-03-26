@@ -15,7 +15,8 @@ class Node(pygame.Rect):
         self.previous = None
         #is the node an unpenetrable obstacle?:
         self.obstacle = False
-
+        # Manhatan distance: the distance between two points measured along axes at right angles. In a plane with p1 at (x1, y1) and p2 at (x2, y2), it is |x1 - x2| + |y1 - y2|. Lm distance:
+        self.dist = 1000
         #calling the parent class constructor (pygame.Rect)
         super().__init__(x, y, width, height)
     def setAsObstackle(self, val = True):
@@ -31,9 +32,13 @@ class Node(pygame.Rect):
     def setG(self, val):
         self.g = val
     def getH(self):
-       return self.h
+        return self.h
     def setH(self, val):
         self.h = val
+    def getDist(self):
+        return self.dist
+    def setDist(self, val):
+        self.dist = val
     def getPrevious(self):
         return self.previous
     def setPrevious(self, val):
