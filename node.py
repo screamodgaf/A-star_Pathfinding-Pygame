@@ -61,9 +61,25 @@ class Node(pygame.Rect):
         if x + 1 < MATRIX_WIDTH:
             right = worldRectsList[(x + 1) + y * MATRIX_WIDTH]
             self.neighbours.append(right)
+
         if y - 1 >= 0 :
             up = worldRectsList[x + (y - 1) * MATRIX_WIDTH]  # (y-1) must be in braces !!!
             self.neighbours.append(up)
         if y + 1 < MATRIX_HEIGHT:
             down = worldRectsList[x + (y + 1) * MATRIX_WIDTH]
             self.neighbours.append(down)
+    #diagonals:
+        return
+        if x-1 >=0 and y+1 < MATRIX_HEIGHT:
+            topLeft = worldRectsList[(x-1) + (y + 1) * MATRIX_WIDTH]
+            self.neighbours.append(topLeft)
+        if x+1 < MATRIX_WIDTH and y+1 < MATRIX_HEIGHT:
+            topRight = worldRectsList[(x+1) + (y + 1) * MATRIX_WIDTH]
+            self.neighbours.append(topRight)
+
+        if x-1 >=0 and y-1 >=0:
+            downLeft = worldRectsList[(x-1) + (y - 1) * MATRIX_WIDTH]
+            self.neighbours.append(downLeft)
+        if x+1 < MATRIX_WIDTH and y+1 < MATRIX_HEIGHT:
+            downRight = worldRectsList[(x+1) + (y + 1) * MATRIX_WIDTH]
+            self.neighbours.append(downRight)

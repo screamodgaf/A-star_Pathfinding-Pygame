@@ -156,10 +156,10 @@ def findBestUnreachable(screen,  FIELD_SIZE, pathList, searchFinished, goalReach
 def pathFinding(nodesToBeEvaluated, nodesEvaluated, goalNode, MATRIX_HEIGHT, MATRIX_WIDTH,
                 previousNode, searchFinished, goalReached):
     lowestFNodeIndex = 0
-    currentNode = 0 #this line turns mutable class object Node into int, which is immutable, thus i had to pass it as list[] previousNode
+    #currentNode = 0 #this line turns mutable class object Node into int, which is immutable, thus i had to pass it as list[] previousNode
     if len(nodesToBeEvaluated) >0:
         for i in range(len(nodesToBeEvaluated)):
-            #if there is a node better suiting the easest path - go there setting it as current:
+            #if there is a node better suiting the easiest path - go there setting it as current:
             if nodesToBeEvaluated[i].getF() < nodesToBeEvaluated[lowestFNodeIndex].getF():
                 lowestFNodeIndex = i
                 currentNode = nodesToBeEvaluated[lowestFNodeIndex]
@@ -196,16 +196,17 @@ def pathFinding(nodesToBeEvaluated, nodesEvaluated, goalNode, MATRIX_HEIGHT, MAT
                 #so if the neighbour was already evaluated and its g is smaller than tempG, set its g to tempG:
                 if neighbour.getG() > tempG:
                     neighbour.setG(tempG)
+
             #and if the neighbour is not in nodesToBeEvaluated, set its g to the current's g +1 (currentNode.getG() +1):
             else:
                 neighbour.setG(tempG)
                 nodesToBeEvaluated.append(neighbour)
-            #setting heuristics (educated guess how long will it take to get to the end) for the neighbour:
-            neighbour.setH(calculateHeuristics(neighbour, goalNode, FIELD_SIZE))
-            neighbour.setF( neighbour.getG() + neighbour.getH() )
-            #get the previous node (where it came from), for finding the best path:
-            #so we seek for the best neighbour, and set current node as the predecesor of the neighbour
-            neighbour.setPrevious(currentNode)
+                #setting heuristics (educated guess how long will it take to get to the end) for the neighbour:
+                neighbour.setH(calculateHeuristics(neighbour, goalNode, FIELD_SIZE))
+                neighbour.setF( neighbour.getG() + neighbour.getH() )
+                #get the previous node (where it came from), for finding the best path:
+                #so we seek for the best neighbour, and set current node as the predecesor of the neighbour
+                neighbour.setPrevious(currentNode)
 
     return currentNode
 
@@ -238,16 +239,16 @@ MATRIX_HEIGHT = 6
 MATRIX_WIDTH = 8
 FIELD_SIZE = 30
 '''
-MATRIX_HEIGHT = 20
-MATRIX_WIDTH = 20
-FIELD_SIZE = 30
+MATRIX_HEIGHT = 200
+MATRIX_WIDTH = 200
+FIELD_SIZE = 3
 matrix = [0] * MATRIX_HEIGHT * MATRIX_WIDTH
 
 
 #make random obstackles
-for _ in range(200):
-    x = random.randint(1, MATRIX_WIDTH-1)
-    y = random.randint(1, MATRIX_HEIGHT-1)
+for _ in range(19200):
+    x = random.randint(0, MATRIX_WIDTH-1)
+    y = random.randint(0, MATRIX_HEIGHT-1)
     matrix[x + y * MATRIX_WIDTH] = 1
 
 worldRectsList = associateMatrixToDrawableRects(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, FIELD_SIZE)
@@ -255,7 +256,7 @@ worldRectsList = associateMatrixToDrawableRects(matrix, MATRIX_HEIGHT, MATRIX_WI
 #make every mode in the matrix (worldRectsList) know its neighbours (fill neighbours list in every node)
 determineNeighboursOfAllNodes(worldRectsList, MATRIX_HEIGHT, MATRIX_WIDTH)
 
-nodesToBeEvaluated = [] #open set - when this list gets empty and the goal is not reacher, the search must be stopped | it starts with initial node
+nodesToBeEvaluated = [] #open set - when this list gets empty and the goal is not reached, the search must be stopped | it starts with initial node
 nodesEvaluated = [] #close set is empty at the beginning
 
 #so to display the final, search that doesnt with reaching the goal:
