@@ -188,10 +188,11 @@ def pathFinding(nodesToBeEvaluated, nodesEvaluated, goalNode, MATRIX_HEIGHT, MAT
     for i in range(len(neighboursOfCurrent)):
         neighbour = neighboursOfCurrent[i]
         #check if a neighbour was already evaluated (meaning is present in nodesEvaluated):
-        if (neighbour not in nodesEvaluated) and (neighbour.checkIfObstackle() == False):
+        if (neighbour.checkIfObstackle() == False) and (neighbour not in nodesEvaluated):
             #and if it was not evaluated, get its g and add 1 to it, as every neighbour of current node will have higher g (current.g + 1):
             tempG = currentNode.getG() +1 + calculateHeuristics(neighbour, goalNode, FIELD_SIZE)
             #check, if the neighbour with a lower tempG was already found in nodesToBeEvaluated (meaning there is a better way to get there):
+
             if neighbour in nodesToBeEvaluated:
                 #so if the neighbour was already evaluated and its g is smaller than tempG, set its g to tempG:
                 if neighbour.getG() > tempG:
@@ -239,16 +240,16 @@ MATRIX_HEIGHT = 6
 MATRIX_WIDTH = 8
 FIELD_SIZE = 30
 '''
-MATRIX_HEIGHT = 200
-MATRIX_WIDTH = 200
-FIELD_SIZE = 3
+MATRIX_HEIGHT = 20
+MATRIX_WIDTH = 20
+FIELD_SIZE = 30
 matrix = [0] * MATRIX_HEIGHT * MATRIX_WIDTH
 
 
 #make random obstackles
-for _ in range(19200):
-    x = random.randint(0, MATRIX_WIDTH-1)
-    y = random.randint(0, MATRIX_HEIGHT-1)
+for _ in range(200):
+    x = random.randint(1, MATRIX_WIDTH-1)
+    y = random.randint(1, MATRIX_HEIGHT-1)
     matrix[x + y * MATRIX_WIDTH] = 1
 
 worldRectsList = associateMatrixToDrawableRects(matrix, MATRIX_HEIGHT, MATRIX_WIDTH, FIELD_SIZE)
